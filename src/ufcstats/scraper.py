@@ -7,30 +7,38 @@ class UFCScraperError(Exception):
 
 
 class UFCScraper:
+    """Handles scraping the UFC website."""
 
-    UFC_URL = "https://www.ufc.com/athlete/"
+    BASE_URL = "https://www.ufc.com/athlete/"
 
     def __init__(self, fighter):
-        self.fighter_tag = fighter.strip().lower().replace(" ", "-")
-        # print(self.fighter_tag)
+        self.fighter_name = fighter
+        self.fighter_tag = self.fighter_name.strip().lower().replace(" ", "-")
+
+    def __str__(self):
+        return f"fighter_name={self.fighter_name} fighter_tag={self.fighter_tag}"
 
     def scrape(self):
-        fighter_url = self.UFC_URL + self.fighter_tag
+        fighter_url = self.BASE_URL + self.fighter_tag
         fighter_page = requests.get(fighter_url)
-        if fighter_page.status_code != 200:
-            raise UFCScraperError(f"Subject '{fighter_url}' not found.")
+        status_code = fighter_page.status_code
+        if status_code != 200:
+            raise UFCScraperError(f"There was an error locating '{self.fighter_name}' ({status_code}).")
 
         return UFCScraperStatObject(fighter_page.content)
 
 
 class UFCScraperStatObject(BeautifulSoup):
+    """Stores a fighter's record."""
+
     def __init__(self, content):
         super().__init__(content, "html.parser")
         results = self.find("div", class_="c-hero__headline-suffix")
-        fighter_stat_string = (
+        fighter_string = (
             results.text.strip().replace(" ", "").replace("\n", "").split("•")
         )
-        fighter_stats = fighter_stat_string[1]
-        fighter_stats = fighter_stats[: fighter_stats.find("(")]
-        fighter_stats = fighter_stats.split("-")
-        self.wins, self.losses, self.draws = fighter_stats
+        fighter_stats = fighter_string[1][: fighter_string[1].find("(")]
+        self.wins, self.losses, self.draws = fighter_stats.split("-")
+
+    def __str__(self):
+        return f"W={self.wins} L={self.losses} D={self.draws}"
