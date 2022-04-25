@@ -15,14 +15,16 @@ def main():
     time.sleep(1.2)
     
     try:
-        s = UFCSiteScraper(my_fighter).scrape()
+        s = UFCSiteScraper(my_fighter)
+        #print(s.__str__())
+        r = s.scrape()
+        #print(r.__str__())
     except UFCError as e:
-        exit(e)
+        exit(e.__str__())
     else:
         print(f"A record was found for {my_fighter}.")
         time.sleep(1.2)
-
-        print(f"{s.win}-{s.loss}-{s.draw}")
+        print(f"{r.win}-{r.loss}-{r.draw}")
 
 
 if __name__ == "__main__":
