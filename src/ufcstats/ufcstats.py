@@ -7,11 +7,11 @@ class UFCScraperError(Exception):
 
 
 class UFCScraper:
-    """Handles scraping the UFC website."""
+    """Handler class for scraping the UFC website."""
 
     BASE_URL = "https://www.ufc.com/athlete/"
 
-    def __init__(self, fighter):
+    def __init__(self, fighter: str):
         self.fighter_name = fighter
         self.fighter_tag = self.fighter_name.strip().lower().replace(" ", "-")
 
@@ -29,16 +29,16 @@ class UFCScraper:
 
 
 class UFCScraperStatObject(BeautifulSoup):
-    """Stores a fighter's record."""
+    """Holder class for the fighter's stats."""
 
-    def __init__(self, content):
+    def __init__(self, content: bytes):
         super().__init__(content, "html.parser")
         results = self.find("div", class_="c-hero__headline-suffix")
         fighter_string = (
             results.text.strip().replace(" ", "").replace("\n", "").split("•")
         )
         fighter_stats = fighter_string[1][: fighter_string[1].find("(")]
-        self.wins, self.losses, self.draws = fighter_stats.split("-")
+        self.win, self.loss, self.draw = fighter_stats.split("-")
 
     def __str__(self):
-        return f"W={self.wins} L={self.losses} D={self.draws}"
+        return f"W={self.win} L={self.loss} D={self.draw}"
