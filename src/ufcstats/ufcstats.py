@@ -2,11 +2,11 @@ from bs4 import BeautifulSoup
 import requests
 
 
-class UFCScraperError(Exception):
+class UFCError(Exception):
     pass
 
 
-class UFCScraper:
+class UFCSiteScraper:
     """Handler class for scraping the UFC website."""
 
     BASE_URL = "https://www.ufc.com/athlete/"
@@ -23,12 +23,12 @@ class UFCScraper:
         fighter_page = requests.get(fighter_url)
         status_code = fighter_page.status_code
         if status_code != 200:
-            raise UFCScraperError(f"There was an error locating '{self.fighter_name}' ({status_code}).")
+            raise UFCError(f"There was an error locating '{self.fighter_name}' ({status_code}).")
 
-        return UFCScraperStatObject(fighter_page.content)
+        return UFCStatObject(fighter_page.content)
 
 
-class UFCScraperStatObject(BeautifulSoup):
+class UFCStatObject(BeautifulSoup):
     """Holder class for the fighter's stats."""
 
     def __init__(self, content: bytes):

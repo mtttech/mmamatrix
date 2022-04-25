@@ -1,7 +1,7 @@
 import sys
 import time
 
-from ufcstats import UFCScraper, UFCScraperError
+from ufcstats import UFCSiteScraper, UFCError
 
 
 def main():
@@ -15,15 +15,14 @@ def main():
     time.sleep(1.2)
     
     try:
-        s = UFCScraper(my_fighter).scrape()
-    except UFCScraperError as e:
+        s = UFCSiteScraper(my_fighter).scrape()
+    except UFCError as e:
         exit(e)
     else:
         print(f"A record was found for {my_fighter}.")
         time.sleep(1.2)
 
         print(f"{s.win}-{s.loss}-{s.draw}")
-        time.sleep(1.2)
 
 
 if __name__ == "__main__":
