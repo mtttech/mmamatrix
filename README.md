@@ -5,7 +5,7 @@ A simple tool that rips fighter stats from the UFC website.
 ## Usage
 
 ```
-git clone https://gitlab.com/mtttech/ufcstats.git
+git clone https://github.com/mtttech/ufcstats.git
 
 cd ufcstats
 
