@@ -4,7 +4,7 @@ import time
 from ufcstats import UFCSiteScraper, UFCError
 
 
-def main():
+def main() -> None:
     args = sys.argv
     if len(args) != 2:
         print("Invalid number of arguments specified.")
