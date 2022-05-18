@@ -13,15 +13,31 @@ class MMAMatrix(BeautifulSoup):
         super().__init__(content, "html.parser")
         results = self.find("div", class_="c-hero__headline-suffix")
         rank_text, record_text = results.text.strip().replace("\n", "").split("•")
-        self.rank = reconstruct_string(rank_text)
-        self.win, self.loss, self.draw = reconstruct_string(record_text).split("-")
+        self.rank = self._reconstruct_string(rank_text)
+        self.win, self.loss, self.draw = self._reconstruct_string(record_text).split("-")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"W={self.win} L={self.loss} D={self.draw} rank={self.rank}"
 
+    @staticmethod
+    def _reconstruct_string(string: str) -> str:
+        """Nicely re-formats the return string."""
+        letter_pool = list()
+        reconstructed_string = list()
+        for index in range(0, len(string) - 1):
+            char = string[index]
+            if char != " ":
+                letter_pool.append(char)
+            else:
+                word = "".join(letter_pool)
+                reconstructed_string.append(word)
+                letter_pool = list()
 
-async def fetch(fighter: str):
-    """Handler class for scraping the UFC website."""
+        return  " ".join([w for w in reconstructed_string if w != ""])
+
+
+async def fetch(fighter: str) -> MMAMatrix:
+    """Scrapes the UFC website for a fighter's stats."""
     print(f"Looking up {fighter}'s record...")
     base_url = "https://www.ufc.com/athlete/"
     tag = fighter.strip().lower().replace(" ", "-")
@@ -31,22 +47,7 @@ async def fetch(fighter: str):
     return MMAMatrix(page.content, full_url)
 
 
-def reconstruct_string(string: str) -> str:
-    letter_pool = list()
-    reconstructed_string = list()
-    for index in range(0, len(string) - 1):
-        char = string[index]
-        if char != " ":
-            letter_pool.append(char)
-        else:
-            word = "".join(letter_pool)
-            reconstructed_string.append(word)
-            letter_pool = list()
-
-    return  " ".join([w for w in reconstructed_string if w != ""])
-
-
-async def main():
+async def main() -> None:
     args = sys.argv
     if len(args) != 2:
         print("Invalid number of arguments specified.")
