@@ -1,13 +1,13 @@
-# UFCSTATS
+# MMA Matrix
 
-A simple tool that rips fighter stats from the UFC website.
+A basic tool that rips fighter stats from the UFC website.
 
 ## Usage
 
 ```
-git clone https://github.com/mtttech/ufcstats.git
+git clone https://github.com/mtttech/mmamatrix.git
 
-cd ufcstats
+cd mmamatrix
 
-python src/ufcstats <Fighter's Name>
+python src/mmamatrix <Fighter's Name>
 ```
